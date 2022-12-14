@@ -5,6 +5,7 @@ extern crate addr2line;
 extern crate alloc;
 extern crate cfg_if;
 extern crate log;
+#[cfg(target_arch = "x86_64")]
 extern crate x86;
 
 pub use backtrace::{trace, trace_from, EntryPoint, Frame};
