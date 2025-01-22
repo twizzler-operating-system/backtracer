@@ -1,13 +1,10 @@
-use alloc::borrow::Cow;
-use alloc::str;
+use alloc::{borrow::Cow, str};
 use core::fmt;
 
-use addr2line::gimli;
-use addr2line::Context;
+use addr2line::{gimli, Context};
 
 mod freestanding;
-use self::freestanding::resolve as resolve_imp;
-use self::freestanding::Symbol as SymbolImp;
+use self::freestanding::{resolve as resolve_imp, Symbol as SymbolImp};
 
 /// Resolve an address to a symbol, passing the symbol to the specified
 /// closure.
@@ -40,7 +37,7 @@ use self::freestanding::Symbol as SymbolImp;
 /// }
 /// ```
 pub fn resolve<F: FnMut(&Symbol)>(
-    ctxt: Option<&Context<gimli::EndianRcSlice<gimli::RunTimeEndian>>>,
+    ctxt: Option<&Context<gimli::EndianSlice<'static, gimli::RunTimeEndian>>>,
     offset: u64,
     addr: *mut u8,
     mut cb: F,
@@ -68,8 +65,7 @@ impl Symbol {
     /// symbol name:
     ///
     /// * The `Display` implementation will print out the demangled symbol.
-    /// * The raw `str` value of the symbol can be accessed (if it's valid
-    ///   utf-8).
+    /// * The raw `str` value of the symbol can be accessed (if it's valid utf-8).
     /// * The raw bytes for the symbol name can be accessed.
     pub fn name(&self) -> Option<Cow<str>> {
         self.inner.name()

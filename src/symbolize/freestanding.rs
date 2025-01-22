@@ -1,13 +1,10 @@
-use alloc::borrow::Cow;
-use alloc::string::String;
-
-use addr2line::gimli;
-use addr2line::Context;
-
+use alloc::{borrow::Cow, string::String};
 use core::u32;
 
+use addr2line::{gimli, Context};
+
 pub fn resolve(
-    ctxt: Option<&Context<gimli::EndianRcSlice<gimli::RunTimeEndian>>>,
+    ctxt: Option<&Context<gimli::EndianSlice<'static, gimli::RunTimeEndian>>>,
     offset: u64,
     addr: *mut u8,
     cb: &mut dyn FnMut(&super::Symbol),
@@ -20,10 +17,7 @@ pub fn resolve(
         Option<u32>,
         Option<
             addr2line::FunctionName<
-                addr2line::gimli::EndianReader<
-                    addr2line::gimli::RunTimeEndian,
-                    alloc::rc::Rc<[u8]>,
-                >,
+                addr2line::gimli::EndianSlice<'static, addr2line::gimli::RunTimeEndian>,
             >,
         >,
     ) = ctxt.map_or_else(
@@ -68,9 +62,7 @@ pub struct Symbol {
     file: Option<String>,
     line: Option<u64>,
     fn_name: Option<
-        addr2line::FunctionName<
-            addr2line::gimli::EndianReader<gimli::RunTimeEndian, alloc::rc::Rc<[u8]>>,
-        >,
+        addr2line::FunctionName<addr2line::gimli::EndianSlice<'static, gimli::RunTimeEndian>>,
     >,
 }
 
@@ -81,10 +73,7 @@ impl Symbol {
         line: Option<u64>,
         fn_name: Option<
             addr2line::FunctionName<
-                addr2line::gimli::EndianReader<
-                    addr2line::gimli::RunTimeEndian,
-                    alloc::rc::Rc<[u8]>,
-                >,
+                addr2line::gimli::EndianSlice<'static, addr2line::gimli::RunTimeEndian>,
             >,
         >,
     ) -> Symbol {
