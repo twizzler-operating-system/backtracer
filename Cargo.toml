@@ -28,7 +28,7 @@ gimli = { version = "0.25", default-features = false, features = [
     "endian-reader",
     "stable_deref_trait",
 ] }
-addr2line = { version = "0.16", default-features = false, features = [
+addr2line = { version = "0.25", default-features = false, features = [
     "rustc-demangle",
 ] }
 
