@@ -24,8 +24,8 @@ pub fn resolve(
         || (None, None, None),
         |ctxt| {
             let frame_iter = ctxt.find_frames(addr as u64);
-            if frame_iter.is_ok() {
-                let mut frame_iter = frame_iter.unwrap();
+            //if frame_iter.is_ok() {
+                let mut frame_iter = frame_iter.skip_all_loads();
                 let frame_result = frame_iter.next();
                 if frame_result.is_ok() {
                     let maybe_first_frame = frame_result.unwrap();
@@ -40,7 +40,7 @@ pub fn resolve(
                         };
                     }
                 }
-            }
+            //}
             (None, None, None)
         },
     );
